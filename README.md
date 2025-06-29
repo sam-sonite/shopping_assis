@@ -1,4 +1,4 @@
-#  Product Image to Shopping Assistant
+# Product Image to Shopping Assistant
 
 ![Python](https://img.shields.io/badge/Python-3.8%2B-blue)
 ![License](https://img.shields.io/badge/License-MIT-green)
@@ -9,7 +9,7 @@
 
 ---
 
-##  Tech Stack & Dependencies
+## Tech Stack & Dependencies
 
 | Dependency | Badge |
 |------------|-------|
@@ -33,6 +33,22 @@
 
 ---
 
+##  Project Structure
+
+```
+.
+├── assets/                 # Folder containing product image(s)
+├── main.py                # Main application pipeline
+├── old_main.py            # Legacy version (no summarization)
+├── image_utils.py         # OCR extraction using EasyOCR
+├── search_utils.py        # Search query generation using LLaMA3.2
+├── web_scraper.py         # Builds product search links
+├── summarizer.py          # Summarizes listing content from search pages
+├── requirements.txt       # Python dependencies
+```
+
+---
+
 ##  Setup
 
 ```bash
@@ -51,3 +67,44 @@ pip install -r requirements.txt
 
 # 5. Run the pipeline
 python main.py
+```
+
+>  Ensure [Ollama](https://ollama.com) is installed and the `llama3.2:3b-instruct-fp16` model is pulled using `ollama run llama3.2`.
+
+---
+
+##  Behind the Scenes
+
+1. **OCR Engine** (`EasyOCR`) detects product text from an image.
+2. **Query Generator** uses LLM (`Ollama + LLaMA3.2`) to create a Flipkart-style search.
+3. **Web Search Redirects** return links for Amazon, Flipkart, and eBay.
+4. **HTML Scraper** collects product snippets using `requests + bs4`.
+5. **Summary Engine** processes snippets into short brand/price/offer summaries using LLM.
+
+---
+
+##  Sample Flow
+
+> Given image of a product package like:
+
+`assets/noisebuds.png`
+
+You’ll get:
+```
+Extracted Text:
+"Noise Buds VS104 Max | 45H Playtime | ENC | ₹1299"
+
+Search Query:
+noise buds max with enc under 1500
+
+Results:
+✔ Amazon
+✔ Flipkart
+✔ eBay
+
+Summaries:
+Flipkart: Offers from Noise, boAt, Realme. Prices ~₹999–₹1499. Several under ₹1300 with 13mm drivers.
+```
+
+---
+
